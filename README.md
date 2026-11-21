@@ -2,6 +2,12 @@
 
 A small personal glucose journal built with React, Express and PostgreSQL. Each account can manage its own readings and view daily, month-to-date and previous-month summaries.
 
+## Demo
+
+Screen recording: https://drive.google.com/file/d/1qM_rLvQ0jQaUAwDIYprb0Uzh9NmN2enH/view?usp=sharing
+
+Demo login: `demo@sweety.app` / `SweetyDemo123!`
+
 ## Requirements
 
 - Node.js 18 or newer
@@ -45,7 +51,7 @@ Send the login token as `Authorization: Bearer <token>`. Every reading query is 
 - Dates are stored as PostgreSQL `DATE` values and sent in `YYYY-MM-DD` form. The browser sends its IANA timezone with API requests, so “today” and future-date validation use the patient's local calendar day rather than the server's UTC day. The selected report date drives all three report ranges; “monthly” means the full calendar month immediately before the selected date’s month.
 - Authentication uses a signed seven-day bearer token stored by the browser in local storage. A production deployment should use HTTPS, consider secure same-site cookies and add token revocation/refresh behavior.
 - The UI uses one date selector for the report and reading form so a user can correct a past day. Changing the date updates the daily list and summary cards.
-- With more time, I would add API integration tests against a disposable PostgreSQL database, rate limiting, password reset, pagination, and accessible chart views. Capture screenshots or a short recording after starting the app locally for the submission package.
+- With more time, I would add API integration tests against a disposable PostgreSQL database, rate limiting, password reset, pagination, and accessible chart views.
 
 ## Environment variables
 
