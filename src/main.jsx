@@ -3,11 +3,16 @@ import { createRoot } from 'react-dom/client';
 import './style.css';
 
 const slots = [{ id:'morning', label:'Morning (fasting)', short:'Morning' },{ id:'after_breakfast',label:'After breakfast',short:'After breakfast' },{ id:'after_lunch',label:'After lunch',short:'After lunch' },{ id:'after_dinner',label:'After dinner',short:'After dinner' }];
-const today = () => new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+const today = () => {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+  const part = type => parts.find(item => item.type === type).value;
+  return `${part('year')}-${part('month')}-${part('day')}`;
+};
 const niceDate = date => new Date(`${date}T12:00:00`).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 const tokenStore = { get:()=>localStorage.getItem('sweety-token'), set:v=>localStorage.setItem('sweety-token',v), clear:()=>localStorage.removeItem('sweety-token') };
 async function api(url, options={}) {
-  const response = await fetch(`/api${url}`,{...options,headers:{'Content-Type':'application/json',...(tokenStore.get()?{Authorization:`Bearer ${tokenStore.get()}`} : {}),...options.headers}});
+  const response = await fetch(`/api${url}`,{...options,headers:{'Content-Type':'application/json','X-Timezone':timeZone,...(tokenStore.get()?{Authorization:`Bearer ${tokenStore.get()}`} : {}),...options.headers}});
   if (response.status===204) return null;
   const body = await response.json(); if (!response.ok) throw new Error(body.error||'Request failed.'); return body;
 }
